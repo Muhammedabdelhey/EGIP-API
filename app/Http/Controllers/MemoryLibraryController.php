@@ -87,16 +87,5 @@ class MemoryLibraryController extends Controller
         $memory = MemoryLibrary::find($memory_id);
         return $this->getFile($memory->photo);
     }
-    public function test(){
-        $test=1;
-        return $test;
-    }
-    public function test2(){
-        $test=2;
-        return $test;
-    }
-    public function test3(){
-        $test=333;
-        return $test;
-    }
+   
 }
