@@ -91,4 +91,8 @@ class MemoryLibraryController extends Controller
         $test=0;
         return $test;
     }
+    public function test2(){
+        $test=2;
+        return $test;
+    }
 }
