@@ -88,6 +88,6 @@ class MemoryLibraryController extends Controller
         return $this->getFile($memory->photo);
     }
     public function test(){
-        return 0;
+        return 1;
     }
 }
