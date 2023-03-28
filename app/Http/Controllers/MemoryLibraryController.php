@@ -96,7 +96,7 @@ class MemoryLibraryController extends Controller
         return $test;
     }
     public function test3(){
-        $test=3;
+        $test=33;
         return $test;
     }
 }
