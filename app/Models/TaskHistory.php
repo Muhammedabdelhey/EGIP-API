@@ -12,4 +12,8 @@ class TaskHistory extends Model
     protected $fillable=[
         'confirmation photo	','task_id'
     ];
+
+    public function taskScheduler(){
+        return $this->belongsTo(TaskScheduler::class,'task_id');
+    }
 }

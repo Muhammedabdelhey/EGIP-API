@@ -9,7 +9,11 @@ class CustomRepeat extends Model
 {
     use HasFactory;
     protected $table = 'custom_repeats';
-    protected $fillable=[
-        'task_id','date'
+    protected $fillable = [
+        'task_id', 'date'
     ];
+    public function taskScheduler()
+    {
+        return $this->belongsTo(TaskScheduler::class, 'task_id');
+    }
 }

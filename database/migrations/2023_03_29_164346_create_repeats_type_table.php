@@ -13,8 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('custom_repeats', function (Blueprint $table) {
-            $table->date('date');
+        Schema::create('repeats_type', function (Blueprint $table) {
+            $table->id();
+            $table->string('type');
         });
     }
 
@@ -25,8 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('custom_repeats', function (Blueprint $table) {
-            $table->dropColumn('date');
-        });
+        Schema::dropIfExists('repeats_type');
     }
 };

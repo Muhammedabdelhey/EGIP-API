@@ -32,4 +32,8 @@ class Patient extends Model
     {
         return $this->hasMany(MemoryLibrary::class);
     }
+    public function taskScheduler()
+    {
+        return $this->hasMany(TaskScheduler::class);
+    }
 }

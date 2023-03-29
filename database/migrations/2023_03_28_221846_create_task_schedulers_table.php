@@ -17,10 +17,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('details');
-            $table->timestamp("time");
-            $table->integer("repeat")->range(0,1);
+            $table->time("time");
             $table->integer("repeats_per_day");
-            $table->integer("times_of_repeat");
+            $table->boolean('status');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->foreignId('repeat_typeID')->constrained('repeats_type')->cascadeOnUpdate()->restrictOnDelete();
             $table->foreignId("patient_id")->constrained('patients')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
