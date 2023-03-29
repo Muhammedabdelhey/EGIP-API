@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CaregiverController;
 use App\Http\Controllers\MemoryLibraryController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\TaskSchedulerController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -42,6 +43,12 @@ Route::group([
     Route::delete('/memory/{memory_id}', 'deleteMemory');
     Route::get("/memory/{memory_id}", 'getMemory');
     Route::get("/memories/{patient_id}", 'getMemories');
+});
+Route::group([
+    'controller' => TaskSchedulerController::class,
+'middleware' => ['api', 'checkpassword'/*, 'jwt.verify'*/],
+],function(){
+    Route::post('/task','createTask');
 });
 Route::any('{url}', function(){
     return responseJson(404,"","this url not found check parmater");
