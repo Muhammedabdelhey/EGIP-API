@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('custom_repeats', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->foreignId("task_id")->constrained('task_schedulers')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId("task_id")->constrained('task_schedulers','id')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 
