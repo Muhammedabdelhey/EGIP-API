@@ -12,8 +12,10 @@ class CustomRepeat extends Model
     protected $fillable = [
         'task_id', 'date'
     ];
+    public $timestamps = false;
+
     public function taskScheduler()
     {
-        return $this->belongsTo(TaskScheduler::class, 'task_id');
+        return $this->belongsTo(TaskScheduler::class);
     }
 }

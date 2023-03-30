@@ -3,6 +3,8 @@
 //you should put your file on autoload array on composer.jeson file
 // and run  composer dumpautoload on cmd
 
+use App\Models\RepeatType;
+
 if (!function_exists('responseJson')) {
     function responseJson($status, $data, $msg)
     {
@@ -63,6 +65,25 @@ if (!function_exists('MemoryData')) {
             'description' => $memory->description,
             'type' => $memory->type,
             'photo' => $photo,
+        ];
+    }
+}
+
+if (!function_exists('TaskData')) {
+    function taskData($task)
+    {
+        return $data = [
+            'id' => $task->id,
+            'name' => $task->name,
+            'details' => $task->details,
+            'time' => $task->time,
+            'status' => $task->status,
+            'repeats_per_day' => $task->repeats_per_day,
+            'Start_date' => $task->start_date,
+            'End_date' => $task->end_date,
+            // 'Repeat Type' => RepeatType::select("type")->where('id',$task->repeat_typeID)->get(),
+            'patient_id' => $task->patient_id,
+            // 'Task Date' =>$task->customRepeats->date  
         ];
     }
 }

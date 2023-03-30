@@ -22,10 +22,10 @@ class TaskScheduler extends Model
 
     public function customRepeats()
     {
-        return $this->hasMany(CustomRepeat::class, 'repeat_typeID');
+        return $this->hasMany(CustomRepeat::class, 'task_id');
     }
     public function taskHistory()
     {
-        return $this->hasMany(CustomRepeat::class, 'repeat_typeID');
+        return $this->hasMany(CustomRepeat::class,"task_id");
     }
 }
