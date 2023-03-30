@@ -25,24 +25,35 @@ class TasksRequest extends FormRequest
      */
     public function rules()
     {
-        if($this->repeat_typeID==3){
-           return[
-                'days'=>'required|array|min:1',
-                'name'=>'required',
-                'time'=>'required|date_format:H:i:s',
-                'repeats_per_day'=>'required',
-                'start_date'=>'required|date_format:Y-m-d',
-                'end_date'=>'required|date_format:Y-m-d',
-                'repeat_typeID' => 'required|integer|exists:App\Models\RepeatType,id',
-                'patient_id' => 'required|integer|exists:App\Models\Patient,id'
-           ];
+        if ($this->repeat_typeID == 3) {
+            foreach ($this->days as $day) {
+                $d=date('Y-m-d', strtotime("next " . $day));
+                
+                while($d<$this->start_date){
+                    $d=date('Y-m-d', strtotime($d. ' + 7 days'));
+                }
+                $date[] = $d;
+                
+            }
+                return [
+                    'days' => 'required|array|min:1',
+                    'name' => 'required',
+                    'time' => 'required|date_format:H:i:s',
+                    'repeats_per_day' => 'required',
+                    'start_date' => 'required|date_format:Y-m-d|before_or_equal:'.min($date),
+                    'end_date' => 'required|date_format:Y-m-d|after_or_equal:'.max($date),
+                    'repeat_typeID' => 'required|integer|exists:App\Models\RepeatType,id',
+                    'patient_id' => 'required|integer|exists:App\Models\Patient,id',
+                    
+                ];
+            
         }
         return [
-            'name'=>'required',
-            'time'=>'required|date_format:H:i:s',
-            'repeats_per_day'=>'required',
-            'start_date'=>'required|date_format:Y-m-d',
-            'end_date'=>'required|date_format:Y-m-d',
+            'name' => 'required',
+            'time' => 'required|date_format:H:i:s',
+            'repeats_per_day' => 'required',
+            'start_date' => 'required|date_format:Y-m-d',
+            'end_date' => 'required|date_format:Y-m-d',
             'repeat_typeID' => 'required|integer|exists:App\Models\RepeatType,id',
             'patient_id' => 'required|integer|exists:App\Models\Patient,id'
         ];
@@ -50,5 +61,11 @@ class TasksRequest extends FormRequest
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(responseJson(401, "", $validator->errors()));
+    }
+    public function messages()
+    {
+        return [
+            'end_date.after_or_equal' => 'he end date must be a date after or equal to :date',
+        ];
     }
 }

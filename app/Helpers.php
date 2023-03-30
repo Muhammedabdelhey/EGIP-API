@@ -74,38 +74,26 @@ if (!function_exists('TaskData')) {
     {
 
         $type = RepeatType::where('id', $task->repeat_typeID)->pluck('type');
+
+        $data = [
+            'id' => $task->id,
+            'name' => $task->name,
+            'details' => $task->details,
+            'time' => $task->time,
+            'status' => $task->status,
+            'repeats_per_day' => $task->repeats_per_day,
+            'Start_date' => $task->start_date,
+            'End_date' => $task->end_date,
+            'Repeat Type' => $type[0],
+            'patient_id' => $task->patient_id,
+        ];
         if ($task->repeat_typeID == 3) {
             foreach ($task->customRepeats as $key) {
-                $data[] = [
-                    'id' => $task->id,
-                    'name' => $task->name,
-                    'details' => $task->details,
-                    'time' => $task->time,
-                    'status' => $task->status,
-                    'repeats_per_day' => $task->repeats_per_day,
-                    'Start_date' => $task->start_date,
-                    'End_date' => $task->end_date,
-                    'Repeat Type' => $type[0],
-                    'patient_id' => $task->patient_id,
-                    "date" => $key->date
-                ];
+                $data['date']=$key->date;
+                $d[]=$data;
             }
-        } else {
-            $data = [
-                'id' => $task->id,
-                'name' => $task->name,
-                'details' => $task->details,
-                'time' => $task->time,
-                'status' => $task->status,
-                'repeats_per_day' => $task->repeats_per_day,
-                'Start_date' => $task->start_date,
-                'End_date' => $task->end_date,
-                'Repeat Type' => $type[0],
-                'patient_id' => $task->patient_id,
-            ];
+            $data=$d;
         }
-
-
         return $data;
     }
 }
