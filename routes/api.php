@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CaregiverController;
+use App\Http\Controllers\CustomRepeatController;
 use App\Http\Controllers\MemoryLibraryController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\TaskSchedulerController;
@@ -38,7 +39,7 @@ Route::group([
     'middleware' => ['api', 'checkpassword', 'jwt.verify'],
     'controller' => MemoryLibraryController::class
 ], function () {
-    Route::post('/memory',"addMemory");
+    Route::post('/memory', "addMemory");
     Route::put('/memory/{memory_id}', 'updateMemory');
     Route::delete('/memory/{memory_id}', 'deleteMemory');
     Route::get("/memory/{memory_id}", 'getMemory');
@@ -46,10 +47,16 @@ Route::group([
 });
 Route::group([
     'controller' => TaskSchedulerController::class,
-'middleware' => ['api', 'checkpassword'/*, 'jwt.verify'*/],
-],function(){
-    Route::post('/task','createTask');
+    'middleware' => ['api', 'checkpassword'/*, 'jwt.verify'*/],
+], function () {
+    Route::post('/task', 'createTask');
+    Route::get('/task/{task_id}', 'getTask');
+    Route::get('/tasks/{patient_id}', 'getAllTasks');
+    Route::get('/tasks/today/{patient_id}', 'getToDayTasks');
 });
-Route::any('{url}', function(){
-    return responseJson(404,"","this url not found check parmater");
+
+Route::get('todaytask/{patient_id}', [TaskSchedulerController::class,"getToDayTasks"]);
+
+Route::any('{url}', function () {
+    return responseJson(404, "", "this url not found check parmater");
 })->where('url', '.*')->middleware('api');

@@ -89,10 +89,11 @@ if (!function_exists('TaskData')) {
         ];
         if ($task->repeat_typeID == 3) {
             foreach ($task->customRepeats as $key) {
-                $data['date']=$key->date;
-                $d[]=$data;
+                // $days[date('l',strtotime($key->date))]=$key->date;
+                $days[]=date('l',strtotime($key->date));
+
             }
-            $data=$d;
+             $data['Repeat Days']=$days;
         }
         return $data;
     }
