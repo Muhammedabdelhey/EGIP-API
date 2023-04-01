@@ -47,7 +47,7 @@ Route::group([
 });
 Route::group([
     'controller' => TaskSchedulerController::class,
-    'middleware' => ['api', 'checkpassword'/*, 'jwt.verify'*/],
+    'middleware' => ['api', 'checkpassword', 'jwt.verify'],
 ], function () {
     Route::post('/task', 'createTask');
     Route::get('/task/{task_id}', 'getTask');
