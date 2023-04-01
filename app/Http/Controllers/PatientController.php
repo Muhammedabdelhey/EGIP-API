@@ -53,7 +53,7 @@ class PatientController extends Controller
                 foreach ($patients as $patient) {
                     $data[] = patientData($patient->user);
                 }
-                return responseJson(200, $data, 'All Patient for ' . $caregiver->user->name);
+                return responseJson(201, $data, 'All Patient for ' . $caregiver->user->name);
             }
             return responseJson(401, '', 'this caregiver not have Patients');
         }
@@ -65,7 +65,7 @@ class PatientController extends Controller
         $patient = Patient::find($patient_id);
         if ($patient) {
             $data = patientData($patient->user);
-            return responseJson(200, $data, 'data for patient');
+            return responseJson(201, $data, 'data for patient');
         }
         return responseJson(401, '', 'this Pateint_id not found');
     }
@@ -76,7 +76,7 @@ class PatientController extends Controller
         if ($patient) {
             $this->deleteFile($patient->photo);
             User::destroy($patient->User_id);
-            return responseJson(200, ' ', 'Patient deleted ');
+            return responseJson(201, ' ', 'Patient deleted ');
         }
         return responseJson(401, '', 'this Pateint_id not found');
     }

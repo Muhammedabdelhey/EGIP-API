@@ -60,5 +60,5 @@ Route::group([
 Route::post('test/{task_id}', [TaskSchedulerController::class,"confirmTask"]);
 
 Route::any('{url}', function () {
-    return responseJson(404, "", "this url not found check parmater");
+    return responseJson(401, "", "this url not found check parmater");
 })->where('url', '.*')->middleware('api');

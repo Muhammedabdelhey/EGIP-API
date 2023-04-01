@@ -30,7 +30,7 @@ class MemoryLibraryController extends Controller
         $memory = MemoryLibrary::find($memory_id);
         if ($memory) {
             $data = MemoryData($memory);
-            return responseJson(200, $data, "memory data");
+            return responseJson(201, $data, "memory data");
         } // test
         return responseJson(401, '', 'this memory_id not found');
     }
@@ -43,7 +43,7 @@ class MemoryLibraryController extends Controller
                 foreach ($memories as $memory) {
                     $data[] = MemoryData($memory);
                 }
-                return responseJson(200, $data, 'memories data');
+                return responseJson(201, $data, 'memories data');
             }
             return responseJson(401, '', 'this Patient Not have Any Memories');
         }
@@ -55,7 +55,7 @@ class MemoryLibraryController extends Controller
         if ($memory) {
             $this->deleteFile($memory->photo);
             MemoryLibrary::destroy($memory_id);
-            return responseJson(200, '', ' Memory Deleted');
+            return responseJson(201, '', ' Memory Deleted');
         }
         return responseJson(401, '', 'this memory_id not found');
     }
@@ -78,7 +78,7 @@ class MemoryLibraryController extends Controller
                 'updated_at' => Carbon::now()
             ]);
             $data = MemoryData($memory);
-            return responseJson(200, $data, 'Memory Updated');
+            return responseJson(201, $data, 'Memory Updated');
         }
         return responseJson(401, '', 'this memory_id not found');
     }

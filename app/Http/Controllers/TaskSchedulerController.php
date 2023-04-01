@@ -59,7 +59,7 @@ class TaskSchedulerController extends Controller
                 foreach ($taskScheduler as $task) {
                     $data[] = taskData($task);
                 }
-                return responseJson(200, $data, 'task Scheduler data');
+                return responseJson(201, $data, 'task Scheduler data');
             }
             return responseJson(401, '', 'this Patient Not have Any task Scheduler');
         }
@@ -106,7 +106,7 @@ class TaskSchedulerController extends Controller
             if ($history) {
                 return responseJson(201, $history, "task confirmed");
             }
-            return responseJson(201, "", "An Error Occuerd ");
+            return responseJson(401, "", "An Error Occuerd ");
         }
         return responseJson(401, "", "this TaskId not found");
     }
