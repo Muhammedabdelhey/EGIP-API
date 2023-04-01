@@ -25,23 +25,15 @@ class MemoryRequest extends FormRequest
      */
     public function rules()
     {
-        switch ($this->method()) {
-            case 'POST':
-                return [
-                    'name' => 'required|string|between:2,100',
-                    'description' => 'required|string',
-                    'type' => 'required|integer',
-                    'patient_id' => 'required|integer|exists:App\Models\Patient,id'
-                ];
-            case 'PUT':
-                return [
-                    'name' => 'required|string|between:2,100',
-                    'description' => 'required|string',
-                    'type' => 'required|integer',
-                ];
-            default:
-                break;
+        $rule = [
+            'name' => 'required|string|between:2,100',
+            'description' => 'required|string',
+            'type' => 'required|integer',
+        ];
+        if ($this->method() == 'POST') {
+            $rule['patient_id'] = 'required|integer|exists:App\Models\Patient,id';
         }
+        return $rule;
     }
     public function failedValidation(Validator $validator)
     {

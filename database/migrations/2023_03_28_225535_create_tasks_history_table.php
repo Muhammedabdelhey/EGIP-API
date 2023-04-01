@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('tasks_history', function (Blueprint $table) {
             $table->id();
-            $table->string('confirmation photo');
+            $table->string('photo');
             $table->timestamps();
             $table->foreignId("task_id")->constrained('task_schedulers')->cascadeOnDelete()->cascadeOnUpdate();
         });

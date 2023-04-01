@@ -27,40 +27,30 @@ class PatientRequest extends FormRequest
      */
     public function rules()
     {
-        switch ($this->method()) {
-            case 'POST': {
-                    return [
-                        'name' => 'required|string|between:2,100',
-                        'email' => 'required|string|email|max:100|unique:users',
-                        'password' => 'required|string|confirmed|min:6',
-                        'Stage' => 'required|integer',
-                        'address' => 'required|string',
-                        'birth_date' => 'required',
-                        'phone' => 'required',
-                        'gender' => 'required',
-                        'caregiver_id' => 'required|exists:App\Models\Caregiver,id',
-                    ];
-                }
-            case 'PUT': {
-                    $id = $this->route('patient_id');
-                    $patient = Patient::find($id);
-                    if (!$patient) {
-                        throw new HttpResponseException(responseJson(401, '', 'this Pateint_id not found'));
-                    }
-                    return [
-                        'name' => 'required|string|between:2,100',
-                        'email' => 'required|string|email|max:100|unique:users,email,' . $patient->user->id,
-                        'Stage' => 'required|integer',
-                        'address' => 'required|string',
-                        'birth_date' => 'required',
-                        'gender' => 'required',
-                        'phone' => 'required',
-                    ];
-                }
-            default:
-                break;
+        $rule = [
+            'name' => 'required|string|between:2,100',
+            'email' => 'required|string|email|max:100|unique:users',
+            'Stage' => 'required|integer',
+            'address' => 'required|string',
+            'birth_date' => 'required',
+            'phone' => 'required',
+            'gender' => 'required',
+        ];
+        if ($this->method() == 'POST') {
+            $rule['caregiver_id'] = 'required|exists:App\Models\Caregiver,id';
+            $rule['password'] = 'required|string|confirmed|min:6';
         }
+        if ($this->method() == 'PUT') {
+            $id = $this->route('patient_id');
+            $patient = Patient::find($id);
+            if (!$patient) {
+                throw new HttpResponseException(responseJson(401, '', 'this Pateint_id not found'));
+            }
+            $rule['email'] = 'required|string|email|max:100|unique:users,email,' . $patient->user->id;
+        }
+        return $rule;
     }
+
 
     public function failedValidation(Validator $validator)
     {

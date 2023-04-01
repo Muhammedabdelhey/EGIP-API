@@ -10,7 +10,7 @@ class TaskHistory extends Model
     use HasFactory;
     protected $table = 'tasks_history';
     protected $fillable=[
-        'confirmation photo	','task_id'
+        'photo','task_id'
     ];
 
     public function taskScheduler(){

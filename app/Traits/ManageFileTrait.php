@@ -13,7 +13,7 @@ trait ManageFileTrait
             $path = $request->file($fileName)->store($foldarName, 'public');
             return $path;
         } else {
-            return Null;
+            return "Null";
         }
     }
 

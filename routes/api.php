@@ -53,9 +53,11 @@ Route::group([
     Route::get('/task/{task_id}', 'getTask');
     Route::get('/tasks/{patient_id}', 'getAllTasks');
     Route::get('/tasks/today/{patient_id}', 'getToDayTasks');
+    Route::delete('/task/{task_id}', 'deleteTask');
+
 });
 
-Route::get('todaytask/{patient_id}', [TaskSchedulerController::class,"getToDayTasks"]);
+Route::post('test/{task_id}', [TaskSchedulerController::class,"confirmTask"]);
 
 Route::any('{url}', function () {
     return responseJson(404, "", "this url not found check parmater");

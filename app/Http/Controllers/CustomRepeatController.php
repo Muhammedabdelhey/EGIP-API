@@ -30,14 +30,16 @@ class CustomRepeatController extends Controller
     }
     public  static function  getTodayCustomTasks($patient_id)
     {
-        $customRepeatsTasks = TaskScheduler::where('status',1)
+        $data = [];
+        $customRepeatsTasks = TaskScheduler::where('patient_id', $patient_id)->where('status', 1)
             ->whereHas('customRepeats', function (Builder $query) {
                 $today = date('Y-m-d');
                 $query->where('date', $today);
             })->get();
-            foreach($customRepeatsTasks as $task){
-                $data[]=taskData($task);
-            }
+        foreach ($customRepeatsTasks as $task) {
+            $data[] = $task;
+        }
         return $data;
     }
+    
 }

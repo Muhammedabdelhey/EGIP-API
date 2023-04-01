@@ -33,8 +33,8 @@ if (!function_exists('caregiverData')) {
 if (!function_exists('patientData')) {
     function patientData($user)
     {
-        $photo = null;
-        if ($user->patient->photo !== null) {
+        $photo = $user->patient->photo;
+        if ($user->patient->photo !== "Null") {
             $photo = "http://127.0.0.1:8000/api/patientphoto/" . $user->patient->id;
         }
         return $data = [
@@ -55,8 +55,8 @@ if (!function_exists('patientData')) {
 if (!function_exists('MemoryData')) {
     function MemoryData($memory)
     {
-        $photo = null;
-        if ($memory->photo !== null) {
+        $photo = $memory->photo;
+        if ($memory->photo !== "Null") {
             $photo = "http://127.0.0.1:8000/api/memoryphoto/" . $memory->id;
         }
         return $data = [
@@ -90,7 +90,8 @@ if (!function_exists('TaskData')) {
         if ($task->repeat_typeID == 3) {
             foreach ($task->customRepeats as $key) {
                 // $days[date('l',strtotime($key->date))]=$key->date;
-                $days[]=date('l',strtotime($key->date));
+                $days[$key->id]=date('l',strtotime($key->date));
+                // $days[]=date('l',strtotime($key->date));
 
             }
              $data['Repeat Days']=$days;
