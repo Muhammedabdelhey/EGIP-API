@@ -116,6 +116,7 @@ class TaskSchedulerController extends Controller
         $data = [];
         foreach($tasks as $task){
             $repeats=(int)$task->repeats_per_day;
+            $task->time=date('Y-m-d H:i:s',strtotime($task->time));
             $data[]=taskData($task);
             for($i =0 ;$i <$repeats-1;$i++){
                 $newtask = $task;
