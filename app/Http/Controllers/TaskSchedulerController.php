@@ -114,22 +114,12 @@ class TaskSchedulerController extends Controller
     public function checkRepeatsPerDays($tasks)
     {
         $data = [];
-        foreach ($tasks as $task) {
-            if ($task->repeats_per_day == 1) {
-                $data[] = taskData($task);
-            }
-            if ($task->repeats_per_day == 2) {
-                $data[] = taskData($task);
+        foreach($tasks as $task){
+            $repeats=(int)$task->repeats_per_day;
+            $data[]=taskData($task);
+            for($i =0 ;$i <$repeats-1;$i++){
                 $newtask = $task;
-                $newtask->time = date('H:i:s', strtotime(' + 12 hour', strtotime($newtask->time)));
-                $data[] = taskData($newtask);
-            }
-            if ($task->repeats_per_day == 3) {
-                $data[] = taskData($task);
-                $newtask = $task;
-                $newtask->time = date('H:i:s', strtotime(' + 8 hour', strtotime($newtask->time)));
-                $data[] = taskData($newtask);
-                $newtask->time = date('H:i:s', strtotime(' + 8 hour', strtotime($newtask->time)));
+                $newtask->time = date('Y-m-d H:i:s', strtotime(' + '. 24/$repeats .' hour', strtotime($newtask->time)));
                 $data[] = taskData($newtask);
             }
         }
