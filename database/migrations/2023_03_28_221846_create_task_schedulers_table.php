@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('task_schedulers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('details');
+            $table->text('details')->nullable();
             $table->time("time");
             $table->integer("repeats_per_day");
             $table->boolean('status');

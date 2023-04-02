@@ -36,14 +36,17 @@ class TasksRequest extends FormRequest
             'repeat_typeID' => 'required|integer|exists:App\Models\RepeatType,id',
         ];
         if ($this->repeat_typeID == 3) {
+            if (!$this->days) {
+                throw new HttpResponseException(responseJson(401, '', ['days'=>'you should add custom days']));
+            }
+            $rule['days'] = "required|array|min:1";
+            $rule['days.*'] = 'required';
             $date = CustomRepeatController::checkCustomDays($this->days, $this->strat_date);
-            $rule['days'] = 'required|array|min:1';
             $rule['start_date'] = 'required|date_format:Y-m-d|before_or_equal:end_date|before_or_equal:' . min($date);
             $rule['end_date'] = 'required|date_format:Y-m-d|after_or_equal:' . date('l', strtotime(max($date))) . "  " . max($date);
         }
-        if($this->method()=='POST'){
+        if ($this->method() == 'POST') {
             $rule['patient_id'] = 'required|integer|exists:App\Models\Patient,id';
-
         }
         return $rule;
     }

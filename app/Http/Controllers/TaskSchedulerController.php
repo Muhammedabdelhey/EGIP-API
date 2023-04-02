@@ -110,17 +110,45 @@ class TaskSchedulerController extends Controller
         }
         return responseJson(401, "", "this TaskId not found");
     }
+    public function updateTask($id, TasksRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            $task = TaskScheduler::find($id);
+            if ($task) {
+                $task->update([
+                    'name' => $request->name,
+                    'details' => $request->details,
+                    'time' => $request->time,
+                    'status' => $request->status,
+                    'repeats_per_day' => $request->repeats_per_day,
+                    'start_date' => $request->start_date,
+                    'end_date' => $request->end_date,
+                    'repeat_typeID' => $request->repeat_typeID,
+                ]);
+                if ($request->repeat_typeID == 3) {
+                    CustomRepeatController::updateCustomRepeats($request, $task);
+                }
+                DB::commit();
+                return responseJson(201, taskData($task), 'task updated ');
+            }
+            return responseJson(401, "", "this TaskId not found");
+        } catch (Exception $e) {
+            DB::rollBack();
+            return responseJson(401, 'jfdsnsd', $e);
+        }
+    }
 
     public function checkRepeatsPerDays($tasks)
     {
         $data = [];
-        foreach($tasks as $task){
-            $repeats=(int)$task->repeats_per_day;
-            $task->time=date('Y-m-d H:i:s',strtotime($task->time));
-            $data[]=taskData($task);
-            for($i =0 ;$i <$repeats-1;$i++){
+        foreach ($tasks as $task) {
+            $repeats = (int)$task->repeats_per_day;
+            $task->time = date('Y-m-d H:i:s', strtotime($task->time));
+            $data[] = taskData($task);
+            for ($i = 0; $i < $repeats - 1; $i++) {
                 $newtask = $task;
-                $newtask->time = date('Y-m-d H:i:s', strtotime(' + '. 24/$repeats .' hour', strtotime($newtask->time)));
+                $newtask->time = date('Y-m-d H:i:s', strtotime(' + ' . 24 / $repeats . ' hour', strtotime($newtask->time)));
                 $data[] = taskData($newtask);
             }
         }

@@ -51,13 +51,12 @@ Route::group([
 ], function () {
     Route::post('/task', 'createTask');
     Route::get('/task/{task_id}', 'getTask');
+    Route::put('/task/{task_id}', 'updateTask');
     Route::get('/tasks/{patient_id}', 'getAllTasks');
     Route::get('/tasks/today/{patient_id}', 'getToDayTasks');
     Route::delete('/task/{task_id}', 'deleteTask');
 
 });
-
-Route::post('test/{task_id}', [TaskSchedulerController::class,"confirmTask"]);
 
 Route::any('{url}', function () {
     return responseJson(401, "", "this url not found check parmater");

@@ -41,5 +41,16 @@ class CustomRepeatController extends Controller
         }
         return $data;
     }
-    
+
+    public static function updateCustomRepeats(TasksRequest $request, $task)
+    {
+        $days = CustomRepeatController::checkCustomDays($request->days, $request->strat_date);
+        $olddays=CustomRepeat::where("task_id",$task->id)->get();
+        foreach($olddays as $day){
+            $day->delete();
+        }
+        foreach ($days as $key => $date) {
+            $day = CustomRepeat::create(['date' => $date, "task_id" => $task->id]);
+        }
+    }
 }
