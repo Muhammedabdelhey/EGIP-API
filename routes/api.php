@@ -50,6 +50,7 @@ Route::group([
     'middleware' => ['api', 'checkpassword', 'jwt.verify'],
 ], function () {
     Route::post('/task', 'createTask');
+    Route::post('/task/confirm', 'confirmTask');
     Route::get('/task/{task_id}', 'getTask');
     Route::put('/task/{task_id}', 'updateTask');
     Route::get('/tasks/{patient_id}', 'getAllTasks');

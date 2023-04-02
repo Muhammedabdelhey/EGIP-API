@@ -26,6 +26,6 @@ class TaskScheduler extends Model
     }
     public function taskHistory()
     {
-        return $this->hasMany(CustomRepeat::class,"task_id");
+        return $this->hasMany(TaskHistory::class,"task_id");
     }
 }

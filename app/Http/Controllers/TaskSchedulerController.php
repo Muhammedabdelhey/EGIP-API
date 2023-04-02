@@ -87,6 +87,12 @@ class TaskSchedulerController extends Controller
     public function deleteTask($id)
     {
         $task = TaskScheduler::find($id);
+        $photos=$task->taskHistory;
+        foreach($photos as $photo){
+            if($photo->photo !=="Null"){
+                $this->deleteFile($photo->photo);
+            }
+        }
         if ($task) {
             $task->delete();
             return responseJson(201, "", " task Deleted ");
@@ -94,14 +100,14 @@ class TaskSchedulerController extends Controller
         return responseJson(401, "", "this TaskId not found");
     }
 
-    public function confirmTask(Request $request, $id)
+    public function confirmTask(Request $request)
     {
-        $task = TaskScheduler::find($id);
+        $task = TaskScheduler::find($request->task_id);
         if ($task) {
             $photo = $this->uploadFile($request, 'photo', 'Task History Photos');
             $history = TaskHistory::create([
                 'photo' => $photo,
-                'task_id' => $id
+                'task_id' => $request->task_id
             ]);
             if ($history) {
                 return responseJson(201, $history, "task confirmed");
