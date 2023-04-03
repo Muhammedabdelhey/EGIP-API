@@ -5,6 +5,7 @@ use App\Http\Controllers\CaregiverController;
 use App\Http\Controllers\CustomRepeatController;
 use App\Http\Controllers\MemoryLibraryController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\TaskHistoryController;
 use App\Http\Controllers\TaskSchedulerController;
 use Illuminate\Support\Facades\Route;
 
@@ -58,6 +59,17 @@ Route::group([
     Route::delete('/task/{task_id}', 'deleteTask');
 
 });
+Route::group([
+    'controller' => TaskHistoryController::class,
+    'middleware' => ['api', 'checkpassword', 'jwt.verify'],
+], function () {
+    Route::get('history/{patient_id}/{date}','getTaskHistroyByDate')->where('date','[A-Za-z]+|\d{4}(?:-\d{2}){2}');
+    Route::get('history/task/{task_id}', 'getTaskHistory');
+    Route::get('history/patient/{patient_id}', 'getPatientHistroy');
+
+
+});
+Route::get('test/{id}',[TaskHistoryController::class, 'getTaskHistory']);
 
 Route::any('{url}', function () {
     return responseJson(401, "", "this url not found check parmater");
