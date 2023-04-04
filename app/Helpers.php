@@ -35,6 +35,7 @@ if (!function_exists('patientData')) {
     {
         $photo = $user->patient->photo;
         if ($user->patient->photo !== "Null") {
+            
             $photo = "http://127.0.0.1:8000/api/patientphoto/" . $user->patient->id;
         }
         return $data = [
@@ -99,6 +100,21 @@ if (!function_exists('TaskData')) {
         return $data;
     }
 }
+if (!function_exists('historyData')) {
+    function historyData($history)
+    {
+        $photo = $history->photo;
+        if ($history->photo !== "Null") {
+            $photo = "http://127.0.0.1:8000/api/historyphoto/" . $history->id;
+        }
+        return $data = [
+            'Task name' => $history->taskScheduler->name,
+            'Time' => $history->created_at,
+            'photo' => $photo,
+        ];
+    }
+}
+
 if (!function_exists('checkValdation')) {
     function checkValdation($validator)
     {

@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Patient;
 use App\Models\TaskHistory;
 use App\Models\TaskScheduler;
+use App\Traits\ManageFileTrait;
 use DateTime;
 
 class TaskHistoryController extends Controller
 {
+   use ManageFileTrait;
     public function getPatientHistroy($patient_id)
     {
         $patient = Patient::find($patient_id);
@@ -20,7 +22,7 @@ class TaskHistoryController extends Controller
                     if ($task->taskHistory->count() > 0) {
                         $history = $task->taskHistory;
                         foreach ($history as $his) {
-                            $data[] = $his;
+                            $data[] = historyData($his);
                         }
                     }
                 }
@@ -38,7 +40,7 @@ class TaskHistoryController extends Controller
             if ($task->taskHistory->count() > 0) {
                 $history = $task->taskHistory;
                 foreach ($history as $his) {
-                    $data[] = $his;
+                    $data[] = historyData($his);
                 }
                 return responseJson(201, $data, "Task history");
             }
@@ -59,7 +61,7 @@ class TaskHistoryController extends Controller
                         $history = TaskHistory::where('task_id',$task->id)->where('created_at',$date)->get();
                         if ($history->count() > 0) {
                             foreach ($history as $his) {
-                                $data[] = $his;
+                                $data[] = historyData($his);
                             }
                         }
                     }
@@ -75,4 +77,13 @@ class TaskHistoryController extends Controller
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) === $date;
     }
+    public  function getHistoryImage($history_id)
+    {
+        $history = TaskHistory::find($history_id);
+        if ($history) {
+            return $this->getFile($history->photo);
+        }
+        return responseJson(401, '', 'this History_id not found');
+    }
+
 }

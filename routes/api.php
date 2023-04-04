@@ -24,6 +24,8 @@ Route::group([
 
 Route::get('patientphoto/{id}', [PatientController::class, 'getPatientImage'])->middleware('api');
 Route::get('memoryphoto/{id}', [MemoryLibraryController::class, 'getMemoryImage'])->middleware('api');
+Route::get('historyphoto/{id}', [TaskHistoryController::class, 'getHistoryImage'])->middleware('api');
+
 
 Route::group([
     'middleware' => ['api', 'checkpassword', 'jwt.verify'],
@@ -57,19 +59,16 @@ Route::group([
     Route::get('/tasks/{patient_id}', 'getAllTasks');
     Route::get('/tasks/today/{patient_id}', 'getToDayTasks');
     Route::delete('/task/{task_id}', 'deleteTask');
-
 });
 Route::group([
     'controller' => TaskHistoryController::class,
     'middleware' => ['api', 'checkpassword', 'jwt.verify'],
 ], function () {
-    Route::get('history/{patient_id}/{date}','getTaskHistroyByDate')->where('date','[A-Za-z]+|\d{4}(?:-\d{2}){2}');
+    Route::get('history/{patient_id}/{date}', 'getTaskHistroyByDate')->where('date', '[A-Za-z]+|\d{4}(?:-\d{2}){2}');
     Route::get('history/task/{task_id}', 'getTaskHistory');
     Route::get('history/patient/{patient_id}', 'getPatientHistroy');
-
-
 });
-Route::get('test/{id}',[TaskHistoryController::class, 'getTaskHistory']);
+Route::get('test/{id}', [TaskHistoryController::class, 'getTaskHistory']);
 
 Route::any('{url}', function () {
     return responseJson(401, "", "this url not found check parmater");

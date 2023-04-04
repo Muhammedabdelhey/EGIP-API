@@ -31,10 +31,7 @@ class PatientController extends Controller
                 'User_id' => $user->id,
                 'gender' => $request->gender
             ]);
-            DB::table('caregivers_paients')->insert([
-                'caregiver_id' => $request->caregiver_id,
-                'patient_id' => $patient->id
-            ]);
+            $patient->caregivers()->attach( $request->caregiver_id);
             DB::commit();
             $data = patientData($user);
             return responseJson(201, $data, 'Patient successfully Added');
@@ -108,7 +105,7 @@ class PatientController extends Controller
         return responseJson(201, $data, 'Patient Updated ');
     }
 
-    public function getPatientImage($patient_id)
+    public  function getPatientImage($patient_id)
     {
         $patient = Patient::find($patient_id);
         if ($patient) {

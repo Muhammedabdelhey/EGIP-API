@@ -30,9 +30,9 @@ class checkEndDate extends Command
     {
         $tasks = TaskScheduler::where('status', 1)->get();
         if ($tasks) {
-            $tomorrow = date('Y-m-d', strtotime(' + 1 days'));
+            $today = date('Y-m-d');
             foreach ($tasks as $task) {
-                if ($task->end_date < $tomorrow) {
+                if ($task->end_date < $today) {
                     $task->status = 0;
                     $task->save();
                 }
