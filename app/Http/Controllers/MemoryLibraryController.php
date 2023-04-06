@@ -5,16 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MemoryRequest;
 use App\Models\MemoryLibrary;
 use App\Models\Patient;
+use App\Repositories\Interfaces\MemoryRepositoryInterface;
 use App\Traits\ManageFileTrait;
 use Carbon\Carbon;
 
 class MemoryLibraryController extends Controller
 {
     use ManageFileTrait;
+    private MemoryRepositoryInterface $memory;
+    public function __construct(MemoryRepositoryInterface $memory)
+    {
+        $this->memory = $memory;
+    }
     public function addMemory(MemoryRequest $request)
     {
         $photo = $this->uploadFile($request, 'photo', 'memoriesPhotos');
-        $memory = MemoryLibrary::create([
+        $memory = $this->memory->addMemory([
             'name' => $request->name,
             'description' => $request->description,
             'photo' => $photo,
@@ -27,42 +33,38 @@ class MemoryLibraryController extends Controller
 
     public function getMemory($memory_id)
     {
-        $memory = MemoryLibrary::find($memory_id);
+        $memory = $this->memory->getMemory($memory_id);
         if ($memory) {
             $data = MemoryData($memory);
             return responseJson(201, $data, "memory data");
-        } // test
+        }
         return responseJson(401, '', 'this memory_id not found');
     }
     public function getMemories($patient_id)
     {
-        $patient = Patient::find($patient_id);
-        if ($patient) {
-            if ($patient->memories->count() > 0) {
-                $memories = $patient->memories;
-                foreach ($memories as $memory) {
-                    $data[] = MemoryData($memory);
-                }
-                return responseJson(201, $data, 'memories data');
+        $memories = $this->memory->getMemories($patient_id);
+        if ($memories->count()>0) {
+            foreach ($memories as $memory) {
+                $data[] = MemoryData($memory);
             }
-            return responseJson(401, '', 'this Patient Not have Any Memories');
+            return responseJson(201, $data, 'memories data');
         }
-        return responseJson(401, '', 'this patient_id not found');
+        return responseJson(401, '', 'this Patient Not have Any Memories');
     }
     public function deleteMemory($memory_id)
     {
-        $memory = MemoryLibrary::find($memory_id);
+        $memory = $this->memory->getMemory($memory_id);
         if ($memory) {
             $this->deleteFile($memory->photo);
-            MemoryLibrary::destroy($memory_id);
+            $this->memory->deleteMemory($memory_id);
             return responseJson(201, '', ' Memory Deleted');
         }
         return responseJson(401, '', 'this memory_id not found');
     }
 
-    public function updateMemory(MemoryRequest $request, $id)
+    public function updateMemory(MemoryRequest $request, $memory_id)
     {
-        $memory = MemoryLibrary::find($id);
+        $memory = $this->memory->getMemory($memory_id);
         if ($memory) {
             $photo = $this->uploadFile($request, 'photo', 'memoriesPhotos');
             if (!empty($photo)) {
@@ -70,7 +72,7 @@ class MemoryLibraryController extends Controller
             } else {
                 $photo = $memory->photo;
             }
-            $memory->update([
+            $this->memory->updateMemory($memory_id,[
                 'name' => $request->name,
                 'description' => $request->description,
                 'type' => $request->type,
@@ -87,5 +89,4 @@ class MemoryLibraryController extends Controller
         $memory = MemoryLibrary::find($memory_id);
         return $this->getFile($memory->photo);
     }
-   
 }

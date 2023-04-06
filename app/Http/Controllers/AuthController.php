@@ -36,19 +36,6 @@ class AuthController extends Controller
         }
     }
 
-    public function register($request, $type)
-    {
-        $user = User::create(
-            [
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'type' => $type
-            ]
-        );
-        return  $user;
-    }
-
     public function logout()
     {
         auth()->logout();

@@ -35,7 +35,6 @@ Route::group([
     Route::put('/patient/{patient_id}', 'updatePatient');
     Route::delete('/patient/{patient_id}', 'deletePatient');
     Route::get("/patient/{patient_id}", 'getPatient');
-    Route::get("/patients/{caregiver_id}", 'getPatients');
 });
 
 Route::group([
@@ -67,6 +66,14 @@ Route::group([
     Route::get('history/{patient_id}/{date}', 'getTaskHistroyByDate')->where('date', '[A-Za-z]+|\d{4}(?:-\d{2}){2}');
     Route::get('history/task/{task_id}', 'getTaskHistory');
     Route::get('history/patient/{patient_id}', 'getPatientHistroy');
+});
+Route::group([
+    'controller' => CaregiverController::class,
+    'middleware' => ['api', 'checkpassword', 'jwt.verify'],
+], function () {
+    Route::get("/patients/{caregiver_id}", 'getCaregiverPatients');
+    Route::get("/caregiver/{caregiver_id}", 'getCaregiver');
+
 });
 Route::get('test/{id}', [TaskHistoryController::class, 'getTaskHistory']);
 

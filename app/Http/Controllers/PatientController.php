@@ -8,6 +8,7 @@ use App\Models\Patient;
 use App\Models\User;
 use App\Repositories\Interfaces\CaregiverRepositoryInterface;
 use App\Repositories\Interfaces\PatientRepositoryInterface;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Traits\ManageFileTrait;
 use Carbon\Carbon;
 use Exception;
@@ -17,20 +18,22 @@ class PatientController extends Controller
 {
     use ManageFileTrait;
     private PatientRepositoryInterface $patientRepository;
-    private CaregiverRepositoryInterface $caregiverRepository;
-
-    public function __construct(PatientRepositoryInterface $patientRepository, CaregiverRepositoryInterface $caregiverRepository)
+    private UserRepositoryInterface $userRepository;
+    public function __construct(PatientRepositoryInterface $patientRepository, UserRepositoryInterface $userRepository)
     {
         $this->patientRepository = $patientRepository;
-        $this->caregiverRepository = $caregiverRepository;
+        $this->userRepository = $userRepository;
     }
     public function addPatient(PatientRequest $request)
     {
         try {
             DB::beginTransaction();
-            $auth = new AuthController;
-            //0 is type for patient
-            $user = $auth->register($request, 0);
+            $user = $this->userRepository->addUser([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'type' => 0
+            ]);
             $photo = $this->uploadFile($request, 'photo', 'patientphoto');
             $patient = $this->patientRepository->addPatient([
                 'Stage' => $request->Stage,
@@ -51,22 +54,6 @@ class PatientController extends Controller
         }
     }
 
-    public function getPatients($caregiver_id)
-    {
-        $caregiver = $this->caregiverRepository->getCaregiver($caregiver_id);
-        if ($caregiver) {
-            if ($caregiver->patients->count() > 0) {
-                $patients = $caregiver->patients()->get();
-                foreach ($patients as $patient) {
-                    $data[] = patientData($patient->user);
-                }
-                return responseJson(201, $data, 'All Patient for ' . $caregiver->user->name);
-            }
-            return responseJson(401, '', 'this caregiver not have Patients');
-        }
-        return responseJson(401, '', 'this caregiver_id not found');
-    }
-
     public function getPatient($patient_id)
     {
         $patient = $this->patientRepository->getPatient($patient_id);
@@ -82,7 +69,7 @@ class PatientController extends Controller
         $patient = $this->patientRepository->getPatient($patient_id);
         if ($patient) {
             $this->deleteFile($patient->photo);
-            User::destroy($patient->User_id);
+            $this->userRepository->deleteUser($patient->User_id);
             return responseJson(201, ' ', 'Patient deleted ');
         }
         return responseJson(401, '', 'this Pateint_id not found');
@@ -91,28 +78,30 @@ class PatientController extends Controller
     public function updatePatient(PatientRequest $request, $patient_id)
     {
         $patient = $this->patientRepository->getPatient($patient_id);
-        $user = $patient->user;
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'updated_at' => Carbon::now()
-        ]);
-        $photo = $this->uploadFile($request, 'photo', 'patientphoto');
-        if (!empty($photo)) {
-            $this->deleteFile($patient->photo);
-        } else {
-            $photo = $patient->photo;
+        if ($patient) {
+            $this->userRepository->updateUser($patient->user->id, [
+                'name' => $request->name,
+                'email' => $request->email,
+                'updated_at' => Carbon::now()
+            ]);
+            $photo = $this->uploadFile($request, 'photo', 'patientphoto');
+            if (!empty($photo)) {
+                $this->deleteFile($patient->photo);
+            } else {
+                $photo = $patient->photo;
+            }
+            $this->patientRepository->updatePatient($patient_id, [
+                'Stage' => $request->Stage,
+                'address' => $request->address,
+                'birth_date' => $request->birth_date,
+                'phone' => $request->phone,
+                'photo' => $photo,
+                'gender' => $request->gender
+            ]);
+            $data = patientData($patient->user);
+            return responseJson(201, $data, 'Patient Updated ');
         }
-        $this->patientRepository->updatePatient($patient_id, [
-            'Stage' => $request->Stage,
-            'address' => $request->address,
-            'birth_date' => $request->birth_date,
-            'phone' => $request->phone,
-            'photo' => $photo,
-            'gender' => $request->gender
-        ]);
-        $data = patientData($user);
-        return responseJson(201, $data, 'Patient Updated ');
+        return responseJson(401, '', 'this Pateint_id not found');
     }
 
     public  function getPatientImage($patient_id)

@@ -7,21 +7,21 @@ use App\Repositories\Interfaces\PatientRepositoryInterface;
 
 class PatientRepository implements PatientRepositoryInterface
 {
-
+    private Patient $patient;
+    public function __construct(Patient $patient)
+    {
+            $this->patient=$patient;
+    }
     public function addPatient(array $data)
     {
-        return Patient::create($data);
+        return $this->patient->create($data);
     }
 
     public function getPatient($patientID)
     {
-        return Patient::find($patientID);
+        return $this->patient->find($patientID);
     }
 
-    // public function getPatients($caregiverID)
-    // {
-    //     // TODO: Implement getPatients() method.
-    // }
 
     // public function deletePatient($patientID)
     // {
@@ -30,6 +30,6 @@ class PatientRepository implements PatientRepositoryInterface
 
     public function updatePatient($patientID, array $data)
     {
-        return Patient::whereId($patientID)->update($data);
+        return $this->patient->whereId($patientID)->update($data);
     }
 }
