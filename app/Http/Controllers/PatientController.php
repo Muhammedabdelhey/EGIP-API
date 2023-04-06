@@ -6,6 +6,8 @@ use App\Http\Requests\PatientRequest;
 use App\Models\Caregiver;
 use App\Models\Patient;
 use App\Models\User;
+use App\Repositories\Interfaces\CaregiverRepositoryInterface;
+use App\Repositories\Interfaces\PatientRepositoryInterface;
 use App\Traits\ManageFileTrait;
 use Carbon\Carbon;
 use Exception;
@@ -14,6 +16,14 @@ use Illuminate\Support\Facades\DB;
 class PatientController extends Controller
 {
     use ManageFileTrait;
+    private PatientRepositoryInterface $patientRepository;
+    private CaregiverRepositoryInterface $caregiverRepository;
+
+    public function __construct(PatientRepositoryInterface $patientRepository, CaregiverRepositoryInterface $caregiverRepository)
+    {
+        $this->patientRepository = $patientRepository;
+        $this->caregiverRepository = $caregiverRepository;
+    }
     public function addPatient(PatientRequest $request)
     {
         try {
@@ -22,7 +32,7 @@ class PatientController extends Controller
             //0 is type for patient
             $user = $auth->register($request, 0);
             $photo = $this->uploadFile($request, 'photo', 'patientphoto');
-            $patient = Patient::create([
+            $patient = $this->patientRepository->addPatient([
                 'Stage' => $request->Stage,
                 'address' => $request->address,
                 'birth_date' => $request->birth_date,
@@ -31,19 +41,19 @@ class PatientController extends Controller
                 'User_id' => $user->id,
                 'gender' => $request->gender
             ]);
-            $patient->caregivers()->attach( $request->caregiver_id);
+            $patient->caregivers()->syncWithoutDetaching($request->caregiver_id);
             DB::commit();
             $data = patientData($user);
             return responseJson(201, $data, 'Patient successfully Added');
         } catch (Exception $e) {
             DB::rollback();
-            return responseJson(401,"", $e);
+            return responseJson(401, "", $e);
         }
     }
 
     public function getPatients($caregiver_id)
     {
-        $caregiver = Caregiver::find($caregiver_id);
+        $caregiver = $this->caregiverRepository->getCaregiver($caregiver_id);
         if ($caregiver) {
             if ($caregiver->patients->count() > 0) {
                 $patients = $caregiver->patients()->get();
@@ -59,7 +69,7 @@ class PatientController extends Controller
 
     public function getPatient($patient_id)
     {
-        $patient = Patient::find($patient_id);
+        $patient = $this->patientRepository->getPatient($patient_id);
         if ($patient) {
             $data = patientData($patient->user);
             return responseJson(201, $data, 'data for patient');
@@ -69,7 +79,7 @@ class PatientController extends Controller
 
     public function deletePatient($patient_id)
     {
-        $patient = Patient::find($patient_id);
+        $patient = $this->patientRepository->getPatient($patient_id);
         if ($patient) {
             $this->deleteFile($patient->photo);
             User::destroy($patient->User_id);
@@ -80,7 +90,7 @@ class PatientController extends Controller
 
     public function updatePatient(PatientRequest $request, $patient_id)
     {
-        $patient = Patient::find($patient_id);
+        $patient = $this->patientRepository->getPatient($patient_id);
         $user = $patient->user;
         $user->update([
             'name' => $request->name,
@@ -93,7 +103,7 @@ class PatientController extends Controller
         } else {
             $photo = $patient->photo;
         }
-        $patient->update([
+        $this->patientRepository->updatePatient($patient_id, [
             'Stage' => $request->Stage,
             'address' => $request->address,
             'birth_date' => $request->birth_date,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CaregiverRequest;
 use App\Models\Caregiver;
+use App\Repositories\Interfaces\CaregiverRepositoryInterface;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +12,11 @@ use Illuminate\Support\Facades\Validator;
 
 class CaregiverController extends Controller
 {
-
+    private CaregiverRepositoryInterface $caregiverRepository;
+    public function __construct(CaregiverRepositoryInterface $caregiverRepository)
+    {
+        $this->caregiverRepository = $caregiverRepository;
+    }
     public  function addCaregiver(CaregiverRequest $request)
     {
         try {
@@ -19,10 +24,16 @@ class CaregiverController extends Controller
             $auth = new AuthController;
             //1 is type for caregiver
             $user = $auth->register($request, 1);
-            Caregiver::create([
-                'Role' => $request->Role,
-                'User_id' => $user->id,
-            ]);
+            // Caregiver::create([
+            //     'Role' => $request->Role,
+            //     'User_id' => $user->id,
+            // ]);
+            $this->caregiverRepository->addCaregiver(
+               array (
+                    'Role' => $request->Role,
+                    'User_id' => $user->id,
+               )
+            );
             DB::commit();
             $data = caregiverData($user);
             return responseJson(201, $data, 'Caregiver successfully registered');
