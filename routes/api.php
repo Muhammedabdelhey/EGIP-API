@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CaregiverController;
-use App\Http\Controllers\CustomRepeatController;
 use App\Http\Controllers\MemoryLibraryController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\TaskHistoryController;
@@ -47,33 +46,35 @@ Route::group([
     Route::get("/memory/{memory_id}", 'getMemory');
     Route::get("/memories/{patient_id}", 'getMemories');
 });
+
 Route::group([
     'controller' => TaskSchedulerController::class,
     'middleware' => ['api', 'checkpassword', 'jwt.verify'],
 ], function () {
     Route::post('/task', 'createTask');
-    Route::post('/task/confirm', 'confirmTask');
     Route::get('/task/{task_id}', 'getTask');
     Route::put('/task/{task_id}', 'updateTask');
     Route::get('/tasks/{patient_id}', 'getAllTasks');
     Route::get('/tasks/today/{patient_id}', 'getToDayTasks');
     Route::delete('/task/{task_id}', 'deleteTask');
 });
+
 Route::group([
     'controller' => TaskHistoryController::class,
     'middleware' => ['api', 'checkpassword', 'jwt.verify'],
 ], function () {
-    Route::get('history/{patient_id}/{date}', 'getTaskHistroyByDate')->where('date', '[A-Za-z]+|\d{4}(?:-\d{2}){2}');
+    Route::get('history/{patient_id}/{date}', 'getTasksHistroyByDate')->where('date', '[A-Za-z]+|\d{4}(?:-\d{2}){2}');
     Route::get('history/task/{task_id}', 'getTaskHistory');
     Route::get('history/patient/{patient_id}', 'getPatientHistroy');
+    Route::post('/task/confirm', 'confirmTask');
 });
+
 Route::group([
     'controller' => CaregiverController::class,
     'middleware' => ['api', 'checkpassword', 'jwt.verify'],
 ], function () {
     Route::get("/patients/{caregiver_id}", 'getCaregiverPatients');
     Route::get("/caregiver/{caregiver_id}", 'getCaregiver');
-
 });
 Route::get('test/{id}', [TaskHistoryController::class, 'getTaskHistory']);
 

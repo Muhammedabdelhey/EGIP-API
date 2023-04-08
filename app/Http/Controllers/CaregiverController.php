@@ -13,13 +13,12 @@ use Illuminate\Support\Facades\Validator;
 
 class CaregiverController extends Controller
 {
-    private CaregiverRepositoryInterface $caregiverRepository;
-    private UserRepositoryInterface $userRepository;
 
-    public function __construct(CaregiverRepositoryInterface $caregiverRepository, UserRepositoryInterface $userRepository)
-    {
-        $this->caregiverRepository = $caregiverRepository;
-        $this->userRepository = $userRepository;
+
+    public function __construct(
+        private CaregiverRepositoryInterface $caregiverRepository,
+        private UserRepositoryInterface $userRepository
+    ) {
     }
     public  function addCaregiver(CaregiverRequest $request)
     {
@@ -54,6 +53,7 @@ class CaregiverController extends Controller
         }
         return responseJson(401, '', 'this caregiver_id not found');
     }
+    
     public function getCaregiverPatients($caregiver_id)
     {
         $caregiver = $this->caregiverRepository->getCaregiver($caregiver_id);

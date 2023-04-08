@@ -7,11 +7,10 @@ use App\Repositories\Interfaces\UserRepositoryInterface;
 
 class UserRepository implements UserRepositoryInterface
 {
-    private User $user;
-    public function __construct(User $user)
+    public function __construct(private User $user)
     {
-        $this->user = $user;
     }
+    
     public function addUser(array $data)
     {
         return $this->user->create($data);

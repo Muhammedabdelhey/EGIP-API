@@ -17,12 +17,10 @@ use Illuminate\Support\Facades\DB;
 class PatientController extends Controller
 {
     use ManageFileTrait;
-    private PatientRepositoryInterface $patientRepository;
-    private UserRepositoryInterface $userRepository;
-    public function __construct(PatientRepositoryInterface $patientRepository, UserRepositoryInterface $userRepository)
-    {
-        $this->patientRepository = $patientRepository;
-        $this->userRepository = $userRepository;
+    public function __construct(
+        private PatientRepositoryInterface $patientRepository,
+        private  UserRepositoryInterface $userRepository
+    ) {
     }
     public function addPatient(PatientRequest $request)
     {
@@ -85,7 +83,7 @@ class PatientController extends Controller
                 'updated_at' => Carbon::now()
             ]);
             $photo = $this->uploadFile($request, 'photo', 'patientphoto');
-            if (!empty($photo)) {
+            if ($photo!="Null") {
                 $this->deleteFile($patient->photo);
             } else {
                 $photo = $patient->photo;

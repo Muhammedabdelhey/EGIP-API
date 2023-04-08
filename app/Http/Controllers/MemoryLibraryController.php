@@ -12,10 +12,8 @@ use Carbon\Carbon;
 class MemoryLibraryController extends Controller
 {
     use ManageFileTrait;
-    private MemoryRepositoryInterface $memory;
-    public function __construct(MemoryRepositoryInterface $memory)
+    public function __construct(private MemoryRepositoryInterface $memory)
     {
-        $this->memory = $memory;
     }
     public function addMemory(MemoryRequest $request)
     {
@@ -67,7 +65,7 @@ class MemoryLibraryController extends Controller
         $memory = $this->memory->getMemory($memory_id);
         if ($memory) {
             $photo = $this->uploadFile($request, 'photo', 'memoriesPhotos');
-            if (!empty($photo)) {
+            if ($photo!="Null") {
                 $this->deleteFile($memory->photo);
             } else {
                 $photo = $memory->photo;

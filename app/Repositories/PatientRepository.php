@@ -7,10 +7,8 @@ use App\Repositories\Interfaces\PatientRepositoryInterface;
 
 class PatientRepository implements PatientRepositoryInterface
 {
-    private Patient $patient;
-    public function __construct(Patient $patient)
+    public function __construct(private Patient $patient)
     {
-            $this->patient=$patient;
     }
     public function addPatient(array $data)
     {

@@ -7,12 +7,15 @@ use App\Repositories\Interfaces\CaregiverRepositoryInterface;
 
 class CaregiverRepository implements CaregiverRepositoryInterface
 {
+    public function __construct(private Caregiver $caregiver)
+    {
+    }
     public function addCaregiver(array $data)
     {
-        return Caregiver::create($data);
+        return $this->caregiver->create($data);
     }
     public function getCaregiver($id){
-        return Caregiver::find($id);
+        return $this->caregiver->find($id);
     }
 
 }

@@ -7,10 +7,8 @@ use App\Repositories\Interfaces\MemoryRepositoryInterface;
 
 class MemoryRepository implements MemoryRepositoryInterface
 {
-    private MemoryLibrary $memory;
-    public function __construct(MemoryLibrary $memory)
+    public function __construct(private MemoryLibrary $memory)
     {
-        $this->memory = $memory;
     }
     public function addMemory(array $data)
     {
