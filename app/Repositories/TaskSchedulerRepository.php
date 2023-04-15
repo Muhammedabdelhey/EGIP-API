@@ -26,7 +26,7 @@ class TaskSchedulerRepository implements TaskSchedulerRepositoryInterface
     {
         $today = date('Y-m-d');
         return $this->task->where('patient_id', $patient_id)
-            ->where('status', 1)->whereRaw('"' . $today . '" between `start_date` and `end_date`')
+            ->active()->whereRaw('"' . $today . '" between `start_date` and `end_date`')
             ->doesntHave('customRepeats')->get();
     }
     public function deleteTask($task_id)

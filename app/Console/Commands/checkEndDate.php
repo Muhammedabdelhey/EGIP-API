@@ -28,15 +28,23 @@ class checkEndDate extends Command
      */
     public function handle()
     {
-        $tasks = TaskScheduler::where('status', 1)->get();
-        if ($tasks) {
+        $tasks = TaskScheduler::active()->get();
+        $collection=collect($tasks);
+        $collection->each(function ($item, $key) {
             $today = date('Y-m-d');
-            foreach ($tasks as $task) {
-                if ($task->end_date < $today) {
-                    $task->status = 0;
-                    $task->save();
-                }
+            if ($item->end_date<$today) {
+                $item->status = 0;
+                $item->save();
             }
-        }
+        });
+        // if ($tasks) {
+        //     $today = date('Y-m-d');
+        //     foreach ($tasks as $task) {
+        //         if ($task->end_date < $today) {
+        //             $task->status = 0;
+        //             $task->save();
+        //         }
+        //     }
+        // }
     }
 }

@@ -80,6 +80,7 @@ class PatientController extends Controller
             $this->userRepository->updateUser($patient->user->id, [
                 'name' => $request->name,
                 'email' => $request->email,
+                'password' => bcrypt($request->password),
                 'updated_at' => Carbon::now()
             ]);
             $photo = $this->uploadFile($request, 'photo', 'patientphoto');

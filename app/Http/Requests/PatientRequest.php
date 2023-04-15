@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
+use function PHPUnit\Framework\isNull;
 
 class PatientRequest extends FormRequest
 {
@@ -35,12 +36,12 @@ class PatientRequest extends FormRequest
             'birth_date' => 'required',
             'phone' => 'required',
             'gender' => 'required',
+            'password' => 'required|string|confirmed|min:6'
+
         ];
-        if ($this->method() == 'POST') {
+        if (is_null($this->route('patient_id'))) {
             $rule['caregiver_id'] = 'required|exists:App\Models\Caregiver,id';
-            $rule['password'] = 'required|string|confirmed|min:6';
-        }
-        if ($this->method() == 'PUT') {
+        } else {
             $id = $this->route('patient_id');
             $patient = Patient::find($id);
             if (!$patient) {

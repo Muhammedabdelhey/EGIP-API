@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TasksRequest;
 use App\Models\TaskScheduler;
-use App\Http\Controllers\CustomRepeatController;
 use App\Models\Patient;
 use App\Models\TaskHistory;
 use App\Repositories\Interfaces\TaskSchedulerRepositoryInterface;
@@ -82,13 +81,13 @@ class TaskSchedulerController extends Controller
     public function deleteTask($id)
     {
         $task = $this->taskRepository->getTask($id);
-        $taskhistory = $task->taskHistory;
-        foreach ($taskhistory as $history) {
-            if ($history->photo !== "Null") {
-                $this->deleteFile($history->photo);
-            }
-        }
         if ($task) {
+            $taskhistory = $task->taskHistory;
+            foreach ($taskhistory as $history) {
+                if ($history->photo !== "Null") {
+                    $this->deleteFile($history->photo);
+                }
+            }
             $this->taskRepository->deleteTask($id);
             return responseJson(201, "", " task Deleted ");
         }
@@ -112,9 +111,7 @@ class TaskSchedulerController extends Controller
                     'end_date' => $request->end_date,
                     'repeat_typeID' => $request->repeat_typeID,
                 ]);
-
                 $this->taskService->updateCustomRepeats($request->repeat_typeID, $request->days, $request->start_date, $task->id);
-
                 DB::commit();
                 return responseJson(201, taskData($task), 'task updated ');
             }
@@ -124,5 +121,4 @@ class TaskSchedulerController extends Controller
             return responseJson(401, 'jfdsnsd', $e);
         }
     }
-    
 }

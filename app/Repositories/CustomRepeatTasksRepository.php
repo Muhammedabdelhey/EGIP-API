@@ -27,7 +27,7 @@ class CustomRepeatTasksRepository
     public function getTodayCustomTasks($patient_id)
     {
         $data = [];
-        $customRepeatsTasks = TaskScheduler::where('patient_id', $patient_id)->where('status', 1)
+        $customRepeatsTasks = TaskScheduler::where('patient_id', $patient_id)->active()
             ->whereHas('customRepeats', function (Builder $query) {
                 $today = date('Y-m-d');
                 $query->where('date', $today);

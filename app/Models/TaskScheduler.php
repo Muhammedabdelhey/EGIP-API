@@ -28,4 +28,7 @@ class TaskScheduler extends Model
     {
         return $this->hasMany(TaskHistory::class,"task_id");
     }
+    public function scopeActive($query){
+        $query->where('status',1);
+    }
 }

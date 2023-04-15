@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Controllers\CustomRepeatController;
+use App\Services\TaskSchedulerService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -41,12 +41,15 @@ class TasksRequest extends FormRequest
             }
             $rule['days'] = "required|array|min:1";
             $rule['days.*'] = 'required';
-            $date = CustomRepeatController::checkCustomDays($this->days, $this->strat_date);
+            $date = TaskSchedulerService::checkCustomDays($this->days, $this->strat_date);
             $rule['start_date'] = 'required|date_format:Y-m-d|before_or_equal:end_date|before_or_equal:' . min($date);
             $rule['end_date'] = 'required|date_format:Y-m-d|after_or_equal:' . date('l', strtotime(max($date))) . "  " . max($date);
         }
-        if ($this->method() == 'POST') {
+        if (is_null($this->route('task_id'))) {
             $rule['patient_id'] = 'required|integer|exists:App\Models\Patient,id';
+        }
+        else{
+            $rule['status'] = 'required';
         }
         return $rule;
     }

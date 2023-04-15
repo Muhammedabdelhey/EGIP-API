@@ -30,7 +30,8 @@ class MemoryRequest extends FormRequest
             'description' => 'required|string',
             'type' => 'required|integer',
         ];
-        if ($this->method() == 'POST') {
+        
+        if (is_null($this->route('memory_id'))) {
             $rule['patient_id'] = 'required|integer|exists:App\Models\Patient,id';
         }
         return $rule;

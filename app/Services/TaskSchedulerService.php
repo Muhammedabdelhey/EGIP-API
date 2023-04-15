@@ -33,6 +33,9 @@ class TaskSchedulerService
             CustomRepeat::where("task_id", $task_id)->delete();
             $this->customRepeatRepository->addCustomRepeats($days, $task_id);
         }
+        else{
+            CustomRepeat::where("task_id", $task_id)->delete();
+        }
     }
 
     public function checkRepeatsPerDays($tasks)
