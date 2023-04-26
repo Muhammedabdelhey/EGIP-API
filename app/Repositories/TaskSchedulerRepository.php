@@ -36,7 +36,7 @@ class TaskSchedulerRepository implements TaskSchedulerRepositoryInterface
     public function updateTask($task_id, array $data)
     {
         $task = $this->getTask($task_id);
-        return $task->update($data);
+        $task->update($data);
         return $task;
     }
 }

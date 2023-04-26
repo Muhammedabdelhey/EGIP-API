@@ -79,7 +79,7 @@ class PatientController extends Controller
         if ($patient) {
             try {
                 DB::beginTransaction();
-                $this->userRepository->updateUser($patient->user->id, [
+                $user = $this->userRepository->updateUser($patient->user->id, [
                     'name' => $request->name,
                     'email' => $request->email,
                     'password' => bcrypt($request->password),
@@ -100,11 +100,11 @@ class PatientController extends Controller
                     'gender' => $request->gender
                 ]);
                 DB::commit();
-                $data = patientData($patient->user);
+                $data = patientData($user);
                 return responseJson(201, [$data], 'Patient Updated ');
             } catch (Exception $e) {
                 DB::rollback();
-                return responseJson(401, "", $e);
+                return responseJson(401, "error", $e);
             }
         }
         return responseJson(401, '', 'this Pateint_id not found');

@@ -101,7 +101,7 @@ class TaskSchedulerController extends Controller
             DB::beginTransaction();
             $task = $this->taskRepository->getTask($id);
             if ($task) {
-                $this->taskRepository->updateTask($id, [
+                $task =$this->taskRepository->updateTask($id, [
                     'name' => $request->name,
                     'details' => $request->details,
                     'time' => $request->time,
