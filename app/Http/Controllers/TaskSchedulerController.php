@@ -49,7 +49,7 @@ class TaskSchedulerController extends Controller
     {
         $task = $this->taskRepository->getTask($id);
         if ($task) {
-            return responseJson(201, taskData($task), "done");
+            return responseJson(201, [taskData($task)], "done");
         }
         return responseJson(401, "", "this TaskId not found");
     }
@@ -113,7 +113,7 @@ class TaskSchedulerController extends Controller
                 ]);
                 $this->taskService->updateCustomRepeats($request->repeat_typeID, $request->days, $request->start_date, $task->id);
                 DB::commit();
-                return responseJson(201, taskData($task), 'task updated ');
+                return responseJson(201, [taskData($task)], 'task updated ');
             }
             return responseJson(401, "", "this TaskId not found");
         } catch (Exception $e) {

@@ -45,7 +45,7 @@ class PatientController extends Controller
             $patient->caregivers()->syncWithoutDetaching($request->caregiver_id);
             DB::commit();
             $data = patientData($user);
-            return responseJson(201, $data, 'Patient successfully Added');
+            return responseJson(201, [$data], 'Patient successfully Added');
         } catch (Exception $e) {
             DB::rollback();
             return responseJson(401, "", $e);
@@ -57,7 +57,7 @@ class PatientController extends Controller
         $patient = $this->patientRepository->getPatient($patient_id);
         if ($patient) {
             $data = patientData($patient->user);
-            return responseJson(201, $data, 'data for patient');
+            return responseJson(201, [$data], 'data for patient');
         }
         return responseJson(401, '', 'this Pateint_id not found');
     }
@@ -77,28 +77,35 @@ class PatientController extends Controller
     {
         $patient = $this->patientRepository->getPatient($patient_id);
         if ($patient) {
-            $this->userRepository->updateUser($patient->user->id, [
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'updated_at' => Carbon::now()
-            ]);
-            $photo = $this->uploadFile($request, 'photo', 'patientphoto');
-            if ($photo!="Null") {
-                $this->deleteFile($patient->photo);
-            } else {
-                $photo = $patient->photo;
+            try {
+                DB::beginTransaction();
+                $this->userRepository->updateUser($patient->user->id, [
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password),
+                    'updated_at' => Carbon::now()
+                ]);
+                $photo = $this->uploadFile($request, 'photo', 'patientphoto');
+                if ($photo != "Null") {
+                    $this->deleteFile($patient->photo);
+                } else {
+                    $photo = $patient->photo;
+                }
+                $this->patientRepository->updatePatient($patient_id, [
+                    'Stage' => $request->Stage,
+                    'address' => $request->address,
+                    'birth_date' => $request->birth_date,
+                    'phone' => $request->phone,
+                    'photo' => $photo,
+                    'gender' => $request->gender
+                ]);
+                DB::commit();
+                $data = patientData($patient->user);
+                return responseJson(201, [$data], 'Patient Updated ');
+            } catch (Exception $e) {
+                DB::rollback();
+                return responseJson(401, "", $e);
             }
-            $this->patientRepository->updatePatient($patient_id, [
-                'Stage' => $request->Stage,
-                'address' => $request->address,
-                'birth_date' => $request->birth_date,
-                'phone' => $request->phone,
-                'photo' => $photo,
-                'gender' => $request->gender
-            ]);
-            $data = patientData($patient->user);
-            return responseJson(201, $data, 'Patient Updated ');
         }
         return responseJson(401, '', 'this Pateint_id not found');
     }

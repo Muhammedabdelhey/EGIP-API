@@ -28,6 +28,8 @@ class PatientRepository implements PatientRepositoryInterface
 
     public function updatePatient($patientID, array $data)
     {
-        return $this->patient->whereId($patientID)->update($data);
+        $patient =$this->getPatient($patientID);
+        return $patient->update($data);
+        return $patient;
     }
 }

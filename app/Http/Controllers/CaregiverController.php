@@ -49,7 +49,7 @@ class CaregiverController extends Controller
         $caregiver = $this->caregiverRepository->getCaregiver($caregiver_id);
         if ($caregiver) {
             $data = caregiverData($caregiver->user);
-            return responseJson(201, $data, $caregiver->user->name . " Data");
+            return responseJson(201, [$data], $caregiver->user->name . " Data");
         }
         return responseJson(401, '', 'this caregiver_id not found');
     }

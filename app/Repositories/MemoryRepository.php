@@ -20,7 +20,9 @@ class MemoryRepository implements MemoryRepositoryInterface
     }
     public function updateMemory($memory_id, array $data)
     {
-        return $this->memory->whereId($memory_id)->update( $data);
+        $memory=$this->getMemory($memory_id);
+        $memory->update($data);
+        return $memory;
     }
     public function deleteMemory($memory_id)
     {
@@ -28,6 +30,6 @@ class MemoryRepository implements MemoryRepositoryInterface
     }
     public function getMemories($patient_id)
     {
-        return $this->memory->where('patient_id',$patient_id)->get();
+        return $this->memory->where('patient_id', $patient_id)->get();
     }
 }

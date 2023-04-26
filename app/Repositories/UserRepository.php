@@ -10,14 +10,16 @@ class UserRepository implements UserRepositoryInterface
     public function __construct(private User $user)
     {
     }
-    
+
     public function addUser(array $data)
     {
         return $this->user->create($data);
     }
     public function updateUser($id, array $data)
     {
-        return $this->user->whereId($id)->update($data);
+        $user = $this->user->find($id);
+        $user->update($data);
+        return $user;
     }
     public function deleteUser($id)
     {
