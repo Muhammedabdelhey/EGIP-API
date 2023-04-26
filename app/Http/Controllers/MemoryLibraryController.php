@@ -34,7 +34,7 @@ class MemoryLibraryController extends Controller
         $memory = $this->memoryRepository->getMemory($memory_id);
         if ($memory) {
             $data = MemoryData($memory);
-            return responseJson(201, $data, "memory data");
+            return responseJson(201, [$data], "memory data");
         }
         return responseJson(401, '', 'this memory_id not found');
     }

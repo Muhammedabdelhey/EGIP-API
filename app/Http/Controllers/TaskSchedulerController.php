@@ -38,7 +38,7 @@ class TaskSchedulerController extends Controller
             ]);
             $this->taskService->addCustomRepeats($request->repeat_typeID, $request->days, $request->start_date, $task->id);
             DB::commit();
-            return responseJson(201, taskData($task), "Task Inserted ");
+            return responseJson(201, [taskData($task)], "Task Inserted ");
         } catch (Exception $e) {
             DB::rollBack();
             return responseJson(401, '', $e);
