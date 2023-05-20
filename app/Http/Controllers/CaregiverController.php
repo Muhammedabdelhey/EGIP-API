@@ -65,7 +65,7 @@ class CaregiverController extends Controller
                 }
                 return responseJson(201, $data, 'All Patient for ' . $caregiver->user->name);
             }
-            return responseJson(401, '', 'this caregiver not have Patients');
+            return responseJson(200, [], 'this caregiver not have Patients');
         }
         return responseJson(401, '', 'this caregiver_id not found');
     }

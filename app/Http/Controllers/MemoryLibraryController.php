@@ -47,7 +47,7 @@ class MemoryLibraryController extends Controller
             }
             return responseJson(201, $data, 'memories data');
         }
-        return responseJson(401, '', 'this Patient Not have Any Memories');
+        return responseJson(200, [], 'this Patient Not have Any Memories');
     }
     public function deleteMemory($memory_id)
     {

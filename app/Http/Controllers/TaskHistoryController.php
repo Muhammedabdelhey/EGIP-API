@@ -47,7 +47,7 @@ class TaskHistoryController extends Controller
                 }
                 return responseJson(201, $data, "patient history");
             }
-            return responseJson(401, '', "this patient  doesn't have  tasks ");
+            return responseJson(200, [], "this patient  doesn't have  tasks ");
         }
         return responseJson(401, '', 'this patient_id not found');
     }
@@ -63,7 +63,7 @@ class TaskHistoryController extends Controller
                 }
                 return responseJson(201, $data, "Task history");
             }
-            return responseJson(401, '', "this task  doesn't have  history yet ");
+            return responseJson(200, [], "this task  doesn't have  history yet ");
         }
         return responseJson(401, '', 'this Task_id not found');
     }
@@ -86,7 +86,7 @@ class TaskHistoryController extends Controller
                     }
                     return responseJson(201, $data, "patient history for this " . $date);
                 }
-                return responseJson(401, '', "this patient  doesn't have  tasks ");
+                return responseJson(200, [], "this patient  doesn't have  tasks ");
             }
             return responseJson(401, '', 'this patient_id not found');
         }

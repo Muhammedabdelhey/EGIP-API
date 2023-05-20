@@ -64,7 +64,7 @@ class TaskSchedulerController extends Controller
             $data = $this->taskService->checkRepeatsPerDays($data);
             return responseJson(201, $data, 'task Scheduler data');
         }
-        return responseJson(401, '', 'this Patient Not have Any task Scheduler');
+        return responseJson(200, [], 'this Patient Not have Any tasks');
     }
 
     public function getToDayTasks($patient_id)

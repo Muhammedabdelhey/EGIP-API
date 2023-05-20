@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CaregiverController;
 use App\Http\Controllers\MemoryLibraryController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\TaskHistoryController;
 use App\Http\Controllers\TaskSchedulerController;
@@ -21,9 +22,9 @@ Route::group([
     Route::get('/user-profile', 'userProfile')->middleware("jwt.verify");
 });
 
-Route::get('patientphoto/{id}', [PatientController::class, 'getPatientImage'])->middleware('api');
-Route::get('memoryphoto/{id}', [MemoryLibraryController::class, 'getMemoryImage'])->middleware('api');
-Route::get('historyphoto/{id}', [TaskHistoryController::class, 'getHistoryImage'])->middleware('api');
+// Route::get('patientphoto/{id}', [PatientController::class, 'getPatientImage'])->middleware('api');
+// Route::get('memoryphoto/{id}', [MemoryLibraryController::class, 'getMemoryImage'])->middleware('api');
+//Route::get('historyphoto/{id}', [TaskHistoryController::class, 'getHistoryImage'])->middleware('api');
 
 
 Route::group([
@@ -32,8 +33,10 @@ Route::group([
 ], function () {
     Route::post('/patient', 'addPatient');
     Route::post('/patient/{patient_id}', 'updatePatient');
-    Route::delete('/patient/{patient_id}', 'deletePatient');
+    Route::get('/patient/delete/{patient_id}', 'deletePatient');
     Route::get("/patient/{patient_id}", 'getPatient');
+    Route::get('patient/notifications/{patient_id}', [NotificationController::class, 'getPaientNotifications']);
+    Route::get('patientphoto/{id}', 'getPatientImage')->withoutMiddleware('jwt.verify');
 });
 
 Route::group([
@@ -42,9 +45,10 @@ Route::group([
 ], function () {
     Route::post('/memory', "addMemory");
     Route::post('/memory/{memory_id}', 'updateMemory');
-    Route::delete('/memory/{memory_id}', 'deleteMemory');
+    Route::get('/memory/delete/{memory_id}', 'deleteMemory');
     Route::get("/memory/{memory_id}", 'getMemory');
     Route::get("/memories/{patient_id}", 'getMemories');
+    Route::get('memoryphoto/{id}', 'getMemoryImage')->withoutMiddleware('jwt.verify');
 });
 
 Route::group([
@@ -56,7 +60,7 @@ Route::group([
     Route::post('/task/{task_id}', 'updateTask');
     Route::get('/tasks/{patient_id}', 'getAllTasks');
     Route::get('/tasks/today/{patient_id}', 'getToDayTasks');
-    Route::delete('/task/{task_id}', 'deleteTask');
+    Route::get('/task/delete/{task_id}', 'deleteTask');
 });
 
 Route::group([
@@ -67,16 +71,18 @@ Route::group([
     Route::get('history/task/{task_id}', 'getTaskHistory');
     Route::get('history/patient/{patient_id}', 'getPatientHistroy');
     Route::post('/task/confirm', 'confirmTask');
+    Route::get('historyphoto/{id}', 'getHistoryImage')->withoutMiddleware('jwt.verify');
 });
 
 Route::group([
     'controller' => CaregiverController::class,
-    'middleware' => ['api', 'jwt.verify'],
+    'middleware' => ['api', 'jwt.verify'/*, 'IsCaregiver'*/],
 ], function () {
     Route::get("/patients/{caregiver_id}", 'getCaregiverPatients');
     Route::get("/caregiver/{caregiver_id}", 'getCaregiver');
+    Route::get('caregiver/notifications/{caregiver_id}', [NotificationController::class, 'getCaregiverNotifications']);
 });
-Route::get('test/{id}', [TaskHistoryController::class, 'getTaskHistory']);
+Route::post('notify', [NotificationController::class, 'addNotify']);
 
 Route::any('{url}', function () {
     return responseJson(401, "", "this url not found check parmater");

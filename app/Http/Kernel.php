@@ -65,7 +65,8 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'checkpassword' => \App\Http\Middleware\CheckPassword::class,
         'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
-
-
+        'IsCaregiver' => \App\Http\Middleware\CheckCaregiver::class,
+        'IsPatient' => \App\Http\Middleware\CheckPatient::class,
+        'IsPatientCaregiver' => \App\Http\Middleware\CheckPatientCaregivers::class,
     ];
 }

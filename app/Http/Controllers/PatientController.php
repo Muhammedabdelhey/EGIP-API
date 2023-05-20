@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
+
 class PatientController extends Controller
 {
     use ManageFileTrait;
@@ -82,7 +83,7 @@ class PatientController extends Controller
                 $user = $this->userRepository->updateUser($patient->user->id, [
                     'name' => $request->name,
                     'email' => $request->email,
-                    'password' => bcrypt($request->password),
+                    //'password' => bcrypt($request->password),
                     'updated_at' => Carbon::now()
                 ]);
                 $photo = $this->uploadFile($request, 'photo', 'patientphoto');

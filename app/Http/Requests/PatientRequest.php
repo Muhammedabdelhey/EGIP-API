@@ -36,11 +36,12 @@ class PatientRequest extends FormRequest
             'birth_date' => 'required',
             'phone' => 'required',
             'gender' => 'required',
-            'password' => 'required|string|confirmed|min:6'
 
         ];
         if (is_null($this->route('patient_id'))) {
             $rule['caregiver_id'] = 'required|exists:App\Models\Caregiver,id';
+            $rule['password']= 'required|string|confirmed|min:6';
+
         } else {
             $id = $this->route('patient_id');
             $patient = Patient::find($id);
