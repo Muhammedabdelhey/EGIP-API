@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TasksEvents;
 use App\Http\Requests\TasksRequest;
-use App\Models\TaskScheduler;
-use App\Models\Patient;
-use App\Models\TaskHistory;
 use App\Repositories\Interfaces\TaskSchedulerRepositoryInterface;
 use App\Services\TaskSchedulerService;
 use App\Traits\ManageFileTrait;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class TaskSchedulerController extends Controller
@@ -38,6 +35,7 @@ class TaskSchedulerController extends Controller
             ]);
             $this->taskService->addCustomRepeats($request->repeat_typeID, $request->days, $request->start_date, $task->id);
             DB::commit();
+            event(new TasksEvents($request->patient_id));
             return responseJson(201, [taskData($task)], "Task Inserted ");
         } catch (Exception $e) {
             DB::rollBack();
@@ -89,6 +87,7 @@ class TaskSchedulerController extends Controller
                 }
             }
             $this->taskRepository->deleteTask($id);
+            event(new TasksEvents($task->patient_id));
             return responseJson(201, "", " task Deleted ");
         }
         return responseJson(401, "", "this TaskId not found");
@@ -101,7 +100,7 @@ class TaskSchedulerController extends Controller
             DB::beginTransaction();
             $task = $this->taskRepository->getTask($id);
             if ($task) {
-                $task =$this->taskRepository->updateTask($id, [
+                $task = $this->taskRepository->updateTask($id, [
                     'name' => $request->name,
                     'details' => $request->details,
                     'time' => $request->time,
@@ -113,6 +112,7 @@ class TaskSchedulerController extends Controller
                 ]);
                 $this->taskService->updateCustomRepeats($request->repeat_typeID, $request->days, $request->start_date, $task->id);
                 DB::commit();
+                event(new TasksEvents($task->patient_id));
                 return responseJson(201, [taskData($task)], 'task updated ');
             }
             return responseJson(401, "", "this TaskId not found");
