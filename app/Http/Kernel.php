@@ -67,6 +67,8 @@ class Kernel extends HttpKernel
         'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
         'IsCaregiver' => \App\Http\Middleware\CheckCaregiver::class,
         'IsPatient' => \App\Http\Middleware\CheckPatient::class,
-        'IsPatientCaregiver' => \App\Http\Middleware\CheckPatientCaregivers::class,
+        'IsCaregiverPatient' => \App\Http\Middleware\CheckPatientCaregivers::class,
+        'getPaientId'=> \App\Http\Middleware\ExtractPatientIdFromRelation::class,
+        'or'=> \App\Http\Middleware\ORMiddleware::class,
     ];
 }

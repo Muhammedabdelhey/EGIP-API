@@ -2,15 +2,13 @@
 
 namespace App\Http\Middleware;
 
-use App\Repositories\Interfaces\PatientRepositoryInterface;
-use App\Repositories\PatientRepository;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CheckPatientCaregivers
 {
-    public function __construct(private PatientRepositoryInterface $patientRepository)
+    public function __construct()
     {
     }
     /**
@@ -20,17 +18,26 @@ class CheckPatientCaregivers
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, )
     {
-        $patient = $this->patientRepository->getPatient($request->route('patient_id'));
-        $patientCaregivers = collect($patient->caregivers);
         $loggedInCaregiver = Auth::user()->caregiver;
-        $loggedInCaregiverIsOnPatientCaregivers = $patientCaregivers->contains(function ($caregiver) use ($loggedInCaregiver) {
-            return $caregiver->id === $loggedInCaregiver->id;
+        if (!$loggedInCaregiver) {
+            return responseJson(401, '', 'UnAuthorized Action 1');
+        }
+        // $patient_id = $request->route('patient_id');
+        // if (!$patient_id) {
+        //     $patient_id = $request->patient_id;
+        // }
+        $patient_id=getPatientId($request);
+        $Caregiverpatients = collect($loggedInCaregiver->patients);
+        $patientExists = $Caregiverpatients->contains(function ($patient) use ($patient_id) {
+            return $patient->id == $patient_id;
         });
-        if ($loggedInCaregiverIsOnPatientCaregivers) {
+        if ($patientExists) {
             return $next($request);
         }
-        return responseJson(401, '', 'UnAuthorized Action');
+
+        return responseJson(401, '', 'UnAuthorized Action 2');
+
     }
 }

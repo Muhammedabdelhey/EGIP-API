@@ -18,7 +18,8 @@ class CheckPatient
     public function handle(Request $request, Closure $next)
     {
         $patient = Auth::user()->patient;
-        if (isset($patient) && ($patient->id == $request->patient_id || $patient->id == $request->route("patient_id"))) {
+        $patient_id = getPatientId($request);
+        if (isset($patient) && ($patient->id == $patient_id)) {
             return $next($request);
         }
         return responseJson(401, '', 'UnAuthorized Action');

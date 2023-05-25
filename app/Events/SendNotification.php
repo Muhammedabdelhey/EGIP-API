@@ -20,7 +20,7 @@ class SendNotification implements ShouldBroadcast
      * @return void
      */
     
-    public function __construct(public $patient_id,public $message)
+    public function __construct(public $patient_id,public $caregiver_Ids, public $message)
     {
         //
     }

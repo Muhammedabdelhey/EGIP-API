@@ -42,8 +42,8 @@ class TasksRequest extends FormRequest
             $rule['days'] = "required|array|min:1";
             $rule['days.*'] = 'required';
             $date = TaskSchedulerService::checkCustomDays($this->days, $this->strat_date);
-            $rule['start_date'] = 'required|date_format:Y-m-d|before_or_equal:end_date|before_or_equal:' . min($date);
-            $rule['end_date'] = 'required|date_format:Y-m-d|after_or_equal:' . date('l', strtotime(max($date))) . "  " . max($date);
+            $rule['start_date'] = 'required|date_format:Y-m-d|before_or_equal:end_date|after_or_equal:' . date('Y-m-d');
+            // $rule['end_date'] = 'required|date_format:Y-m-d|after_or_equal:' . date('l', strtotime(max($date))) . "  " . max($date);
         }
         if (is_null($this->route('task_id'))) {
             $rule['patient_id'] = 'required|integer|exists:App\Models\Patient,id';

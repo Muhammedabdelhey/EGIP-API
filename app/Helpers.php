@@ -4,6 +4,7 @@
 // and run  composer dumpautoload on cmd
 
 use App\Models\RepeatType;
+use Illuminate\Http\Request;
 
 if (!function_exists('responseJson')) {
     function responseJson($status, $data, $msg)
@@ -13,7 +14,8 @@ if (!function_exists('responseJson')) {
                 'status' => $status,
                 'data' => $data,
                 'msg' => $msg
-            ]
+            ],
+            $status
         );
     }
 }
@@ -35,7 +37,7 @@ if (!function_exists('patientData')) {
     {
         $photo = $user->patient->photo;
         if ($user->patient->photo !== "Null") {
-            
+
             $photo = "http://127.0.0.1:8000/api/patientphoto/" . $user->patient->id;
         }
         return $data = [
@@ -91,11 +93,11 @@ if (!function_exists('TaskData')) {
         if ($task->repeat_typeID == 3) {
             foreach ($task->customRepeats as $key) {
                 // $days[date('l',strtotime($key->date))]=$key->date;
-                $days[$key->id]=date('l',strtotime($key->date));
+                $days[$key->id] = date('l', strtotime($key->date));
                 // $days[]=date('l',strtotime($key->date));
 
             }
-             $data['Repeat Days']=$days;
+            $data['Repeat Days'] = $days;
         }
         return $data;
     }
@@ -115,12 +117,13 @@ if (!function_exists('historyData')) {
     }
 }
 
-if (!function_exists('checkValdation')) {
-    function checkValdation($validator)
+if (!function_exists('getPatientId')) {
+    function getPatientId(Request $request)
     {
-        if ($validator->fails()) {
-            return responseJson(401, '', $validator->errors());
+        $patient_id = $request->route('patient_id');
+        if (!$patient_id) {
+            $patient_id = $request->patient_id;
         }
-        return true;
+        return $patient_id;
     }
 }

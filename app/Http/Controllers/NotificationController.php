@@ -21,10 +21,17 @@ class NotificationController extends Controller
     {
         $patient_id = $request->patient_id;
         $patient = $this->patientRepository->getPatient($patient_id);
-        Notification::send($patient, new Raspberrypi($patient_id, $request->message));
+        // Notification::send($patient, new Raspberrypi($patient_id, $request->message));
         $caregivers = $patient->caregivers;
+        foreach($caregivers as $caregiver){
+            $caregiver_ids[]=$caregiver->id;
+        }
+        print($caregiver_ids);
+        die;
+        Notification::send($patient, new Raspberrypi($patient_id, $request->message));
         Notification::send($caregivers, new Raspberrypi($patient_id, $request->message));
-        event(new SendNotification($patient_id, $request->message));
+        
+        event(new SendNotification((int)$patient_id,$caregivers->id, $request->message));
         return 'done';
     }
     public function getPaientNotifications($patient_id)

@@ -4,9 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class CheckCaregiver
+class ExtractPatientIdFromRelation
 {
     /**
      * Handle an incoming request.
@@ -15,13 +14,13 @@ class CheckCaregiver
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, $modelName, $modelID)
     {
-        $Caregiver = Auth::user()->caregiver;
-        if (isset($Caregiver) && ($Caregiver->id == $request->caregiver_id || $Caregiver->id == $request->route("caregiver_id"))) {
-            return $next($request);
-        }
-        return responseJson(401, '', 'UnAuthorized Action');
+        $Id = $request->route($modelID);
+        $patientID = app($modelName)->whereId($Id)->pluck('patient_id');
+        $request->merge(['patient_id' => $patientID[0]]);
+        // print($request->patient_id);
+        //die;
         return $next($request);
     }
 }
