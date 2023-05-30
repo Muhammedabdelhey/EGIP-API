@@ -13,6 +13,7 @@ use App\Traits\ManageFileTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Notifications\DatabaseNotification;
 
 
 class PatientController extends Controller
@@ -68,6 +69,12 @@ class PatientController extends Controller
         $patient = $this->patientRepository->getPatient($patient_id);
         if ($patient) {
             $this->deleteFile($patient->photo);
+            if($patient->memories->count()>0){
+                foreach($patient->memories as $memory){
+                    $this->deleteFile($memory->photo);
+                }
+            }
+            DatabaseNotification::whereJsonContains('data->patient_id', $patient_id)->delete();
             $this->userRepository->deleteUser($patient->User_id);
             return responseJson(201, ' ', 'Patient deleted ');
         }

@@ -31,7 +31,7 @@ class TasksRequest extends FormRequest
             'name' => 'required',
             'time' => 'required|date_format:H:i:s',
             'repeats_per_day' => 'required',
-            'start_date' => 'required|date_format:Y-m-d|before_or_equal:end_date',
+            'start_date' => 'required|date_format:Y-m-d|before_or_equal:end_date|after_or_equal:' . date('Y-m-d'),
             'end_date' => 'required|date_format:Y-m-d',
             'repeat_typeID' => 'required|integer|exists:App\Models\RepeatType,id',
         ];

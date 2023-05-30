@@ -31,7 +31,7 @@ class TasksEvents implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return ['Tasks-event-'.$this->patient_id];
+        return ['Tasks-event'];
     }
     public function broadcastAs()
     {
