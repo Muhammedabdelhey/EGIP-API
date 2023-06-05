@@ -20,6 +20,7 @@ class CaregiverController extends Controller
         private UserRepositoryInterface $userRepository
     ) {
     }
+
     public  function addCaregiver(CaregiverRequest $request)
     {
         try {
@@ -44,6 +45,7 @@ class CaregiverController extends Controller
             return responseJson(401, "", $e);
         }
     }
+    
     public function getCaregiver($caregiver_id)
     {
         $caregiver = $this->caregiverRepository->getCaregiver($caregiver_id);

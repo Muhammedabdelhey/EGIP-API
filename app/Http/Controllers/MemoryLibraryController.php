@@ -38,6 +38,7 @@ class MemoryLibraryController extends Controller
         }
         return responseJson(401, '', 'this memory_id not found');
     }
+
     public function getMemories($patient_id)
     {
         $memories = $this->memoryRepository->getMemories($patient_id);
@@ -49,6 +50,7 @@ class MemoryLibraryController extends Controller
         }
         return responseJson(200, [], 'this Patient Not have Any Memories');
     }
+
     public function deleteMemory($memory_id)
     {
         $memory = $this->memoryRepository->getMemory($memory_id);
@@ -82,6 +84,7 @@ class MemoryLibraryController extends Controller
         }
         return responseJson(401, '', 'this memory_id not found');
     }
+    
     public function getMemoryImage($memory_id)
     {
         $memory = MemoryLibrary::find($memory_id);

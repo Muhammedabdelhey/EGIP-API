@@ -18,7 +18,7 @@ class AuthController extends Controller
     {
         $data = [
             'email' => $request->email,
-            'password'=>$request->password
+            'password' => $request->password
         ];
         // if email or password not correct
         if (!$token = auth()->attempt($data)) {
@@ -29,9 +29,11 @@ class AuthController extends Controller
         $this->createNewToken($token);
         //check if user is caregiver
         if ($user->type == 1) {
+            // merge user data with token
             return responseJson(200, array_merge(caregiverData($user), ['token' => $token]), "Caregiver logged in success");
             //check if user is patient
         } else if ($user->type == 0) {
+            // merge user data with token
             return responseJson(200, array_merge(patientData($user), ['token' => $token]), " Patient logged in success");
         }
     }
