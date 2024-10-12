@@ -1,64 +1,38 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Alzheimer's Patient Monitoring System - BALZ
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+We are excited to share the details of our successful graduation project, **BALZ - an Electronic Guide for Alzheimer's Patients**, which earned us an A+ grade! This project was designed to assist Alzheimer's patients by providing a comprehensive solution across three interconnected parts: a mobile app, smart house hardware, and an API. The system is built to enhance patient safety, manage daily tasks, and streamline communication between caregivers and patients.
 
-## About Laravel
+## Project Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Part 1: Mobile App (Flutter)
+The mobile app serves as a key component to address memory loss issues faced by Alzheimer's patients. The app includes two roles: caregiver and patient, with different sets of privileges:
+- **Caregiver Role**: Caregivers can manage multiple patients, add memories, schedule tasks (e.g., medication reminders), and receive notifications for urgent events at the patient's location.
+- **Patient Role**: Patients can maintain their own memory library, manage daily tasks, and receive reminders for task completion and urgent alerts.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Part 2: Smart House Hardware
+We developed a smart home system powered by **Raspberry Pi** to ensure the patient's safety. This hardware includes:
+- **Fire Detection System**: Detects fire and automatically closes gas valves while triggering alarms.
+- **Water Leak Detection**: Shuts off the water valve when a leak is detected, preventing flooding.
+- **Recognition Technology**: Identifies individuals entering the patient's home and ensures secure access.
+- **Alert System**: Sends real-time notifications to both the patient and caregiver via a buzzer and mobile alerts.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Part 3: Backend API (Laravel)
+The core of the system is the **Laravel API** that integrates the smart home system with the mobile app, ensuring secure communication, data management, and real-time notifications.
 
-## Learning Laravel
+#### Key Backend Features
+- **Authentication & Authorization**: Implemented **JWT (JSON Web Token)** for secure user authentication and **middleware** for role-based authorization.
+- **Real-time Notifications**: Utilized **Pusher** to deliver real-time notifications to caregivers and patients for urgent events.
+- **Repository & Service Layer Patterns**: Applied these patterns to ensure clean, maintainable, and scalable code structure.
+- **Task Scheduling with Cron Jobs**: Managed task statuses, such as medication reminders and safety alerts, through a scheduled **Cron job**.
+- **Data Validation**: Custom validation requests ensure data integrity and proper communication between the mobile app and the smart house system.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Technologies Used
+- **Backend**: Laravel, MySQL
+- **Frontend**: Flutter (Mobile App)
+- **Hardware**: Raspberry Pi, Arduino (for smart house integration)
+- **Notifications**: Pusher (Real-time)
+- **Authentication**: JWT (JSON Web Token)
+- **Data Storage**: MySQL Database
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Conclusion
+The Alzheimer's Patient Monitoring System (BALZ) integrates software and hardware to provide a comprehensive, secure, and user-friendly system to assist Alzheimer's patients and their caregivers. By using **Flutter** for mobile, **Laravel** for backend API, and **Raspberry Pi** for hardware integration, we created a seamless and reliable platform for task management, patient safety, and real-time monitoring.
